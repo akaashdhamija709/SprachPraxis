@@ -1,80 +1,58 @@
-# GermanPro
+# replit.md
 
 ## Overview
-GermanPro is a language-learning web app designed to support German speaking practice aligned with CEFR levels (A1–C2). You can practice using voice or text input, receive AI-powered feedback, and track your progress.
 
-## Features
-Practice speaking exercises tailored for each CEFR level (A1 → C2)
+GermanPro is a German language learning application focused on CEFR-level speaking practice. The application provides structured exercises for different proficiency levels (A1-C2) with AI-powered analysis and feedback. Users can practice speaking through voice recognition or text input, receive detailed linguistic analysis, and track their progress over time.
 
-Input your responses via voice or text
+## User Preferences
 
-Get detailed linguistic analysis powered by OpenAI GPT‑4o
+Preferred communication style: Simple, everyday language.
 
-Track progress over time with personalized feedback
+## System Architecture
 
-Communication style: simple, everyday language
+### Frontend Architecture
 
+The frontend is built with React and TypeScript using Vite as the build tool. The application follows a component-based architecture with:
 
-## Architecture
-### Frontend
-Built with React + TypeScript and Vite. Key libraries and tools:
+- **UI Framework**: Radix UI components with shadcn/ui styling system
+- **Styling**: Tailwind CSS with custom CSS variables for theming
+- **State Management**: TanStack Query for server state management
+- **Routing**: Wouter for client-side routing
+- **Form Management**: React Hook Form with Zod validation
 
-UI Framework: Radix UI + shadcn/ui styling
+The frontend is structured around a single-page application with modular components for exercise selection, recording interface, and feedback display. The main practice workflow allows users to select CEFR levels, view exercise prompts, record responses, and receive AI analysis.
 
-Styling: Tailwind CSS with custom CSS variables (dark/light themes)
+### Backend Architecture
 
-State Management: TanStack Query
+The backend uses Express.js with TypeScript in a REST API architecture:
 
-Routing: Wouter
+- **Framework**: Express.js with middleware for JSON parsing and request logging
+- **Database ORM**: Drizzle ORM for type-safe database operations
+- **Storage Pattern**: Abstract storage interface allowing for both in-memory and database implementations
+- **API Design**: RESTful endpoints for exercises, practice sessions, and user progress
 
-Forms & Validation: React Hook Form + Zod
+The backend implements a clean separation between route handlers, business logic, and data storage through the IStorage interface pattern.
 
-Main workflow:
+### Data Storage Solutions
 
-Select CEFR level
+The application uses PostgreSQL as the primary database with Drizzle ORM:
 
-View speaking prompt
+- **Database**: PostgreSQL (configured via DATABASE_URL environment variable)
+- **ORM**: Drizzle with type-safe schema definitions
+- **Migration Management**: Drizzle Kit for schema migrations
+- **Fallback Storage**: In-memory storage implementation for development/testing
 
-Record your response (voice/text)
+The database schema includes tables for exercises, practice sessions, and user progress tracking with proper relationships and indexing.
 
-View AI-generated feedback
+### Authentication and Authorization
 
-### Backend
-A REST API built with Express.js and TypeScript. Architecture highlights:
+Currently, the application does not implement user authentication. The system assumes a single-user context with progress tracking stored without user association. This suggests either a demo/prototype phase or intended single-user deployment.
 
-Server Framework: Express.js (JSON parsing, logging)
+### External Dependencies
 
-Database Layer: Drizzle ORM with PostgreSQL
+- **AI Language Analysis**: OpenAI GPT-4o integration for analyzing German text submissions
+- **Speech Recognition**: Web Speech API for browser-based voice recording (German language)
+- **Database Hosting**: Designed to work with Neon Database (PostgreSQL-compatible)
+- **Development Tools**: Replit-specific plugins and development server integration
 
-Storage Pattern: Abstracted interface for both in-memory and PostgreSQL storage
-
-API Design: Endpoints for exercises, practice sessions, and progress tracking
-
-Clean separation: routes → business logic → storage
-
-## Data Storage
-Primary Database: PostgreSQL (configured via DATABASE_URL)
-
-ORM & Migrations: Drizzle ORM & Drizzle Kit
-
-Development Mode: In-memory storage fallback
-
-Schema supports exercises, sessions, and user progress, with proper indexing for performance
-
-
-## Auth
-No user authentication yet
-
-Single-user context: progress tracked without user accounts
-
-Implementation reflects prototype/demo phase or single-user use case
-
-
-## Dependencies
-AI Analysis: OpenAI GPT‑4o for CEFR assessment, grammar & vocabulary feedback
-
-Speech Recognition: Web Speech API (German language support)
-
-Database Hosting: Compatible with Neon Database (PostgreSQL)
-
-Development Tools: Replit plugins and integrated dev server
+The OpenAI integration provides detailed CEFR-level assessment, grammar analysis, and personalized feedback for German language learners. The system is designed to evaluate speaking proficiency across multiple dimensions including grammar, vocabulary, and sentence structure.
