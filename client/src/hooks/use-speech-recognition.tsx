@@ -17,6 +17,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
   const recognitionRef = useRef<any>(null);
   const isListeningRef = useRef(false);
   const accumulatedTranscriptRef = useRef("");
+  const lastProcessedIndexRef = useRef(0);
 
   const isSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
 
@@ -44,25 +45,32 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     recognition.onresult = (event: any) => {
       console.log('Speech recognition result event:', event.results.length, 'results');
       
-      let finalTranscript = '';
+      let newFinalTranscript = '';
       let interimTranscript = '';
       
-      // Process all results
-      for (let i = 0; i < event.results.length; i++) {
+      // Process only NEW results that we haven't seen before
+      for (let i = lastProcessedIndexRef.current; i < event.results.length; i++) {
         const transcriptPart = event.results[i][0].transcript;
         console.log(`Result ${i}: "${transcriptPart}" (final: ${event.results[i].isFinal})`);
         
         if (event.results[i].isFinal) {
-          finalTranscript += transcriptPart + ' ';
-        } else {
-          interimTranscript += transcriptPart;
+          newFinalTranscript += transcriptPart + ' ';
+          lastProcessedIndexRef.current = i + 1;
+        }
+      }
+      
+      // Process interim results from the last final result onward
+      for (let i = lastProcessedIndexRef.current; i < event.results.length; i++) {
+        if (!event.results[i].isFinal) {
+          interimTranscript += event.results[i][0].transcript;
         }
       }
 
-      // Update accumulated final transcript
-      if (finalTranscript.trim()) {
-        accumulatedTranscriptRef.current += finalTranscript;
-        console.log('Updated accumulated transcript:', accumulatedTranscriptRef.current);
+      // Add only NEW final transcript to accumulated text
+      if (newFinalTranscript.trim()) {
+        accumulatedTranscriptRef.current += newFinalTranscript;
+        console.log('Added new final transcript:', newFinalTranscript);
+        console.log('Total accumulated:', accumulatedTranscriptRef.current);
       }
 
       // Update display with accumulated final + current interim
@@ -171,6 +179,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
   const resetTranscript = useCallback(() => {
     setTranscript("");
     accumulatedTranscriptRef.current = "";
+    lastProcessedIndexRef.current = 0;
   }, []);
 
   return {
