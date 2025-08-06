@@ -1,8 +1,7 @@
-# replit.md
 
 ## Overview
 
-GermanPro is a German language learning application focused on CEFR-level speaking practice. The application provides structured exercises for different proficiency levels (A1-C2) with AI-powered analysis and feedback. Users can practice speaking through voice recognition or text input, receive detailed linguistic analysis, and track their progress over time.
+SprachPraxis is a German language learning application focused on CEFR-level speaking practice. The application provides structured exercises for different proficiency levels (A1-C2) with AI-powered analysis and feedback. Users can practice speaking through voice recognition or text input, receive detailed linguistic analysis, and track their progress over time.
 
 ## User Preferences
 
