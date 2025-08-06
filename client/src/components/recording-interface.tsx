@@ -138,13 +138,14 @@ export default function RecordingInterface({
 
   const wordCount = (textInput || transcript).split(/\s+/).filter(word => word.length > 0).length;
 
+  // Update text input when recording stops (not during recording)
   useEffect(() => {
-    // Update text input with transcript only if user hasn't manually typed anything
-    if (transcript && !textInput) {
-      console.log('Updating text input with transcript:', transcript);
+    // Only update text input when we have transcript and we're not currently listening
+    if (transcript && !isListening && transcript !== textInput) {
+      console.log('Updating text input with final transcript:', transcript);
       setTextInput(transcript);
     }
-  }, [transcript]);
+  }, [transcript, isListening]);
 
   useEffect(() => {
     if (error) {
@@ -188,7 +189,7 @@ export default function RecordingInterface({
           <h4 className="font-medium text-gray-800 mb-3">
             {transcript ? "Speech detected (you can edit):" : "Or type your response:"}
           </h4>
-          {transcript && (
+          {transcript && isListening && (
             <div className="mb-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
               <p className="text-sm text-blue-800">
                 <strong>Live transcript:</strong> {transcript}

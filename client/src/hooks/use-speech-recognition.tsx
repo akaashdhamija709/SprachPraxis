@@ -66,17 +66,18 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
         }
       }
 
-      // Add only NEW final transcript to accumulated text
+      // Add only NEW final transcript to accumulated text with proper formatting
       if (newFinalTranscript.trim()) {
         accumulatedTranscriptRef.current += newFinalTranscript;
         console.log('Added new final transcript:', newFinalTranscript);
         console.log('Total accumulated:', accumulatedTranscriptRef.current);
       }
 
-      // Update display with accumulated final + current interim
+      // Update display with accumulated final + current interim, applying formatting
       const displayTranscript = accumulatedTranscriptRef.current + interimTranscript;
-      console.log('Setting transcript to:', displayTranscript);
-      setTranscript(displayTranscript.trim());
+      const formattedTranscript = formatGermanText(displayTranscript.trim());
+      console.log('Setting transcript to:', formattedTranscript);
+      setTranscript(formattedTranscript);
     };
 
     recognition.onerror = (event: any) => {
@@ -191,6 +192,59 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     stopListening,
     resetTranscript,
   };
+}
+
+// Function to format German text with proper capitalization and punctuation
+function formatGermanText(text: string): string {
+  if (!text) return text;
+  
+  // Split into sentences and clean up
+  let formatted = text.toLowerCase().trim();
+  
+  // Add periods at natural sentence breaks
+  formatted = formatted
+    // Add periods before common sentence starters
+    .replace(/\s+(und dann|aber|jedoch|außerdem|danach|schließlich|zum schluss)/g, '. $1')
+    // Add periods before question words
+    .replace(/\s+(was|wer|wie|wo|wann|warum|welche)/g, '. $1')
+    // Add commas before common conjunctions
+    .replace(/\s+(aber|und|oder|denn|sondern)(?!\s*$)/g, ', $1');
+  
+  // Capitalize first letter of each sentence
+  formatted = formatted.replace(/(^|[.!?]\s+)([a-z])/g, (match, prefix, letter) => {
+    return prefix + letter.toUpperCase();
+  });
+  
+  // Capitalize German nouns (common ones)
+  const germanNouns = [
+    'ich', 'sie', 'er', 'es', 'wir', 'ihr', 'deutschland', 'berlin', 'münchen', 
+    'hamburg', 'köln', 'frankfurt', 'stuttgart', 'düsseldorf', 'dortmund', 'essen',
+    'name', 'alter', 'beruf', 'arbeit', 'familie', 'haus', 'auto', 'zeit', 'jahr',
+    'monat', 'woche', 'tag', 'stunde', 'minute', 'musik', 'film', 'buch', 'sport',
+    'fußball', 'tennis', 'schwimmen', 'laufen', 'essen', 'trinken', 'wasser',
+    'kaffee', 'tee', 'bier', 'wein', 'brot', 'fleisch', 'gemüse', 'obst'
+  ];
+  
+  // Capitalize common German nouns
+  germanNouns.forEach(noun => {
+    const regex = new RegExp(`\\b${noun}\\b(?!\\s*$)`, 'gi');
+    formatted = formatted.replace(regex, (match) => {
+      // Don't capitalize pronouns unless at sentence start
+      if (['ich', 'sie', 'er', 'es', 'wir', 'ihr'].includes(noun)) {
+        const beforeMatch = formatted.substring(0, formatted.indexOf(match));
+        const isAtSentenceStart = /[.!?]\s*$/.test(beforeMatch) || beforeMatch.length === 0;
+        return isAtSentenceStart ? match.charAt(0).toUpperCase() + match.slice(1) : match.toLowerCase();
+      }
+      return match.charAt(0).toUpperCase() + match.slice(1);
+    });
+  });
+  
+  // Add final punctuation if missing
+  if (formatted && !/[.!?]$/.test(formatted)) {
+    formatted += '.';
+  }
+  
+  return formatted;
 }
 
 declare global {
