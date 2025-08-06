@@ -42,24 +42,32 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     };
 
     recognition.onresult = (event: any) => {
+      console.log('Speech recognition result event:', event.results.length, 'results');
+      
+      let finalTranscript = '';
       let interimTranscript = '';
       
-      // Process all results from the beginning
+      // Process all results
       for (let i = 0; i < event.results.length; i++) {
         const transcriptPart = event.results[i][0].transcript;
+        console.log(`Result ${i}: "${transcriptPart}" (final: ${event.results[i].isFinal})`);
         
         if (event.results[i].isFinal) {
-          // Add to accumulated final transcript if not already added
-          if (i >= accumulatedTranscriptRef.current.split(' ').length - 1) {
-            accumulatedTranscriptRef.current += transcriptPart + ' ';
-          }
+          finalTranscript += transcriptPart + ' ';
         } else {
           interimTranscript += transcriptPart;
         }
       }
 
+      // Update accumulated final transcript
+      if (finalTranscript.trim()) {
+        accumulatedTranscriptRef.current += finalTranscript;
+        console.log('Updated accumulated transcript:', accumulatedTranscriptRef.current);
+      }
+
       // Update display with accumulated final + current interim
       const displayTranscript = accumulatedTranscriptRef.current + interimTranscript;
+      console.log('Setting transcript to:', displayTranscript);
       setTranscript(displayTranscript.trim());
     };
 

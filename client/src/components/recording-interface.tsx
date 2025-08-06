@@ -91,9 +91,11 @@ export default function RecordingInterface({
       setRecordingStartTime(null);
     } else {
       if (isSupported) {
+        // Clear previous input when starting new recording
+        setTextInput("");
+        resetTranscript();
         startListening();
         setRecordingStartTime(Date.now());
-        resetTranscript();
       } else {
         toast({
           title: "Speech Recognition Not Supported",
@@ -137,10 +139,12 @@ export default function RecordingInterface({
   const wordCount = (textInput || transcript).split(/\s+/).filter(word => word.length > 0).length;
 
   useEffect(() => {
+    // Update text input with transcript only if user hasn't manually typed anything
     if (transcript && !textInput) {
+      console.log('Updating text input with transcript:', transcript);
       setTextInput(transcript);
     }
-  }, [transcript, textInput]);
+  }, [transcript]);
 
   useEffect(() => {
     if (error) {
@@ -184,6 +188,13 @@ export default function RecordingInterface({
           <h4 className="font-medium text-gray-800 mb-3">
             {transcript ? "Speech detected (you can edit):" : "Or type your response:"}
           </h4>
+          {transcript && (
+            <div className="mb-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+              <p className="text-sm text-blue-800">
+                <strong>Live transcript:</strong> {transcript}
+              </p>
+            </div>
+          )}
           <Textarea
             className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
             placeholder="Hallo, ich heiße..."
