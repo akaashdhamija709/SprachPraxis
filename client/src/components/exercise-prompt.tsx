@@ -19,7 +19,7 @@ export default function ExercisePrompt({ exercise, timeRemaining = "5:00" }: Exe
 
       <div className="bg-blue-50 border-l-4 border-primary p-4 rounded-r-lg">
         <h4 className="font-medium text-gray-800 mb-2">
-          Exercise: {exercise.title} ({exercise.level} Level)
+          Exercise: {exercise.title}
         </h4>
         <p className="text-gray-600 text-sm">{exercise.prompt}</p>
         <div className="mt-2 text-xs text-gray-500">
