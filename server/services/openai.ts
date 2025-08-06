@@ -17,26 +17,25 @@ You are a German language expert specializing in CEFR level assessment for Goeth
 Analyze the following German text and provide detailed feedback:
 
 Text to analyze: "${text}"
-Target CEFR level: ${targetLevel}
+User's target level: ${targetLevel}
 
-Please analyze:
-1. Grammar complexity and accuracy
-2. Vocabulary range and appropriateness
-3. Sentence structure and complexity
-4. Overall CEFR level assessment (A1, A2, B1, B2, C1, C2)
+Please analyze the text objectively and:
+1. Determine the ACTUAL CEFR level demonstrated (A1, A2, B1, B2, C1, C2) based on:
+   - Grammar complexity and accuracy
+   - Vocabulary range and sophistication  
+   - Sentence structure and complexity
+   - Fluency and coherence
 
-Provide scores (0-100) for:
-- Grammar Score
-- Vocabulary Score  
-- Structure Score
-- Overall Score
+2. Compare detected level to target level and provide specific guidance:
+   - If detected level matches target: reinforcement strategies
+   - If detected level is below target: specific steps to improve
+   - If detected level exceeds target: encouragement and next level preparation
 
-Also provide specific feedback points categorized as:
-- "correct": Things done well
-- "warning": Areas for improvement
-- "error": Clear mistakes that need correction
+3. Provide scores (0-100) for each component
+4. Give detailed feedback with examples
+5. Include actionable suggestions for reaching the target level
 
-Include practical suggestions for improvement.
+Focus on practical, specific advice for German language learners preparing for Goethe certificates.
 
 Respond in JSON format with this structure:
 {
@@ -49,11 +48,11 @@ Respond in JSON format with this structure:
     {
       "type": "correct|warning|error",
       "title": "Brief title",
-      "description": "Detailed explanation",
-      "example": "Optional example"
+      "description": "Detailed explanation with specific examples",
+      "example": "Optional German example"
     }
   ],
-  "suggestions": ["Practical improvement suggestions"]
+  "suggestions": ["Specific actionable suggestions to reach ${targetLevel} level"]
 }`;
 
     const response = await openai.chat.completions.create({

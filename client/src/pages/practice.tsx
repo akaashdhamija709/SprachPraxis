@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { Clock, Star } from "lucide-react";
 import AppHeader from "@/components/app-header";
 import LevelSelector from "@/components/level-selector";
@@ -13,15 +14,29 @@ export default function PracticePage() {
   const [selectedLevel, setSelectedLevel] = useState("A1");
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null);
   const [currentAnalysis, setCurrentAnalysis] = useState<GrammarAnalysis | null>(null);
+  const queryClient = useQueryClient();
 
-  // Fetch exercises for selected level
+  // Fetch all exercises (not filtered by level)
   const { data: exercises, isLoading: exercisesLoading } = useQuery<Exercise[]>({
-    queryKey: ["/api/exercises/level", selectedLevel],
+    queryKey: ["/api/exercises"],
   });
 
   // Fetch recent practice sessions
   const { data: recentSessions } = useQuery<PracticeSession[]>({
     queryKey: ["/api/practice-sessions/recent"],
+  });
+
+  // Update target level mutation
+  const updateTargetLevelMutation = useMutation({
+    mutationFn: async (newLevel: string) => {
+      const response = await apiRequest("PATCH", "/api/progress", {
+        currentLevel: newLevel,
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/progress"] });
+    },
   });
 
   // Set first exercise when exercises load
@@ -36,6 +51,11 @@ export default function PracticePage() {
     setCurrentExercise(null);
     setCurrentAnalysis(null);
   }, [selectedLevel]);
+
+  const handleLevelChange = (newLevel: string) => {
+    setSelectedLevel(newLevel);
+    updateTargetLevelMutation.mutate(newLevel);
+  };
 
   const handleAnalysisComplete = (analysis: GrammarAnalysis) => {
     setCurrentAnalysis(analysis);
@@ -77,7 +97,7 @@ export default function PracticePage() {
       <AppHeader />
       
       <main className="container mx-auto px-4 py-6 max-w-6xl">
-        <LevelSelector selectedLevel={selectedLevel} onLevelChange={setSelectedLevel} />
+        <LevelSelector selectedLevel={selectedLevel} onLevelChange={handleLevelChange} />
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Practice Panel */}

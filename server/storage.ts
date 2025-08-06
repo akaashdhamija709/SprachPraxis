@@ -98,6 +98,20 @@ export class MemStorage implements IStorage {
         category: "Culture",
         estimatedDuration: 480,
       },
+      {
+        level: "C2",
+        title: "Philosophy & Ethics",
+        prompt: "Diskutieren Sie ein ethisches Dilemma der modernen Gesellschaft. Erläutern Sie verschiedene Standpunkte und entwickeln Sie eine fundierte Argumentation.",
+        category: "Philosophy",
+        estimatedDuration: 600,
+      },
+      {
+        level: "B2",
+        title: "Education System",
+        prompt: "Vergleichen Sie das Bildungssystem in Deutschland mit dem in Ihrem Heimatland. Welche Vor- und Nachteile sehen Sie?",
+        category: "Education",
+        estimatedDuration: 360,
+      },
     ];
 
     for (const exercise of defaultExercises) {

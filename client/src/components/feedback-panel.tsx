@@ -55,10 +55,28 @@ export default function FeedbackPanel({ analysis }: FeedbackPanelProps) {
         {analysis ? (
           <>
             <div className="text-center mb-4">
-              <div className={`inline-flex items-center justify-center w-16 h-16 ${getLevelColor(analysis.detectedLevel)} text-white rounded-full text-xl font-bold mb-2`}>
-                {analysis.detectedLevel}
+              <div className="flex items-center justify-center space-x-4 mb-3">
+                <div className="text-center">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 ${getLevelColor(analysis.detectedLevel)} text-white rounded-full text-lg font-bold mb-1`}>
+                    {analysis.detectedLevel}
+                  </div>
+                  <p className="text-xs text-gray-600">Your Level</p>
+                </div>
+                <div className="text-gray-400">→</div>
+                <div className="text-center">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 border-2 ${getLevelColor(userProgress?.currentLevel || "A1")} text-gray-700 rounded-full text-lg font-bold mb-1`}>
+                    {userProgress?.currentLevel || "A1"}
+                  </div>
+                  <p className="text-xs text-gray-600">Target Level</p>
+                </div>
               </div>
-              <p className="text-sm text-gray-600">Detected Level</p>
+              <p className="text-sm text-gray-600">
+                {analysis.detectedLevel === (userProgress?.currentLevel || "A1") 
+                  ? "Great! You're at your target level!" 
+                  : analysis.detectedLevel > (userProgress?.currentLevel || "A1")
+                  ? "Excellent! You're above your target level!"
+                  : "Keep practicing to reach your target level!"}
+              </p>
             </div>
 
             <div className="space-y-3">

@@ -10,7 +10,8 @@ const CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
 export default function LevelSelector({ selectedLevel, onLevelChange }: LevelSelectorProps) {
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-medium text-gray-800 mb-4">Select Your Target Level</h2>
+      <h2 className="text-2xl font-medium text-gray-800 mb-4">Your Target Level</h2>
+      <p className="text-sm text-gray-600 mb-4">The AI will analyze your German and determine your actual level, then suggest how to reach your target level.</p>
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
         {CEFR_LEVELS.map((level) => (
           <Button
