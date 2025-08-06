@@ -84,9 +84,18 @@ Respond in JSON format with this structure:
       suggestions: result.suggestions || [],
     };
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error analyzing German text:", error);
-    throw new Error("Failed to analyze text. Please try again.");
+    
+    if (error.code === 'insufficient_quota') {
+      throw new Error("OpenAI quota exceeded. Please check your billing details at https://platform.openai.com/account/billing");
+    } else if (error.code === 'rate_limit_exceeded') {
+      throw new Error("Rate limit exceeded. Please wait a moment and try again.");
+    } else if (error.code === 'invalid_api_key') {
+      throw new Error("Invalid API key. Please check your OpenAI API key.");
+    } else {
+      throw new Error("Failed to analyze text. Please try again later.");
+    }
   }
 }
 
