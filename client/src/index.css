@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(122, 39%, 49%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(14, 100%, 57%);
+  --accent-foreground: hsl(60, 9.1%, 97.8%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --warning: hsl(36, 100%, 50%);
+  --warning-foreground: hsl(60, 9.1%, 97.8%);
+  --success: hsl(122, 39%, 49%);
+  --success-foreground: hsl(60, 9.1%, 97.8%);
+  --error: hsl(0, 73%, 41%);
+  --error-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-gray-50 text-foreground;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}
+
+@layer components {
+  .level-button {
+    @apply bg-white border-2 border-gray-300 text-gray-600 py-3 px-4 rounded-lg font-medium hover:border-primary hover:text-primary transition-all duration-200 shadow-sm;
+  }
+  
+  .level-button.active {
+    @apply bg-primary border-primary text-white;
+  }
+
+  .feedback-item {
+    @apply flex items-start space-x-3 p-3 rounded-lg border-l-4;
+  }
+
+  .feedback-item.correct {
+    @apply bg-green-50 border-green-500;
+  }
+
+  .feedback-item.warning {
+    @apply bg-orange-50 border-orange-500;
+  }
+
+  .feedback-item.error {
+    @apply bg-red-50 border-red-500;
+  }
+
+  .recording-button {
+    @apply w-20 h-20 bg-accent hover:bg-red-600 text-white rounded-full shadow-lg transition-all duration-200 transform hover:scale-105;
+  }
+
+  .recording-button.active {
+    @apply bg-red-600 animate-pulse;
+  }
+
+  .progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2;
+  }
+
+  .progress-fill {
+    @apply h-2 rounded-full transition-all duration-300;
+  }
+}
